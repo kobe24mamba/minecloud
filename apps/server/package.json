@@ -16,7 +16,6 @@
     "mvn:clean:install": "mvnw.cmd clean install -f pom.xml",
     "mvn:clean:package": "mvnw.cmd clean package -f pom.xml",
     "mvn:dependency:tree": "mvnw.cmd dependency:tree -f pom.xml",
-    "mvn:auth:run": "mvnw.cmd spring-boot:run -pl auth -f pom.xml",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

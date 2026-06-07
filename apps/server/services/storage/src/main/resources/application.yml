@@ -1,0 +1,28 @@
+server:
+  port: 8081 # 存储服务端口，区别于网关
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/minecloud
+    username: postgres
+    password: postgres
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 开发环境打印 SQL
+  global-config:
+    db-config:
+      id-type: assign_id # 使用雪花算法生成 ID，适合分布式
+      logic-delete-field: isDeleted  # 逻辑删除字段名
+      logic-delete-value: "true"     # 删除状态的值（注意加引号，让它作为布尔值处理）
+      logic-not-delete-value: "false" # 未删除状态的值
+
+minecloud:
+  upload:
+    path: D:/minecloud/data/  # /opt/minecloud/data

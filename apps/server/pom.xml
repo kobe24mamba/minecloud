@@ -12,6 +12,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>services</module>
+        <module>common</module>
+        <module>api</module>
     </modules>
     <groupId>org.feiesos</groupId>
     <artifactId>server</artifactId>
