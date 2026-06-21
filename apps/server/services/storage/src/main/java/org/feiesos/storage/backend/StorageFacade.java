@@ -1,6 +1,7 @@
 package org.feiesos.storage.backend;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.feiesos.common.exception.BusinessException;
 import org.feiesos.storage.config.StorageProperties;
 import org.feiesos.storage.entity.FileNode;
