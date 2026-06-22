@@ -59,7 +59,9 @@ public class JwtAuthGatewayFilter implements GlobalFilter, Ordered {
 
         JwtClaims claims = jwtTokenProvider.parseToken(token);
 
+        // 保留原始 Authorization header，并添加用户信息 header
         ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
+                .header("Authorization", "Bearer " + token)  // 传递原始 token
                 .header("X-User-Id", String.valueOf(claims.getUserId()))
                 .header("X-Username", claims.getUsername())
                 .build();

@@ -149,9 +149,9 @@ VALUES
 ('file:delete', '删除文件'),
 ('user:manage', '用户管理');
 
--- 分配用户角色
+-- 分配用户角色（admin，admin）
 INSERT INTO sys_user (id, username, password_hash, nickname, email, enabled, verified_at) VALUES
-(1, 'admin', '$2a$10$NkMpGj7X8Z9Y0aBcDeFgHiJkLmNoPqRsTuVwXyZ1234567890AbCdEf', '管理员', 'admin@example.com', true, NOW());
+(1, 'admin', '$2a$12$skuxiZagy/arecxKbZhfU.iU62eAVBhc8zAgo55.DaJQKnFIMxkvq', '管理员', 'admin@example.com', true, NOW());
 
 -- admin -> ROLE_ADMIN
 INSERT INTO sys_user_role (user_id, role_id) VALUES (1, 1);

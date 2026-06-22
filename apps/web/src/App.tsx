@@ -10,6 +10,10 @@ import Home from './pages/Home';
 import ShareManage from './pages/ShareManage';
 import SharedFile from './pages/SharedFile';
 import FileManager from './pages/FileManager';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminUsers from './pages/AdminUsers';
+import AdminRoles from './pages/AdminRoles';
+import AdminPermissions from './pages/AdminPermissions';
 
 export default function App() {
   useEffect(() => {
@@ -35,6 +39,11 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/files" element={<FileManager />} />
           <Route path="/shares" element={<ShareManage />} />
+          {/* 管理后台路由 */}
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="/admin/roles" element={<AdminRoles />} />
+          <Route path="/admin/permissions" element={<AdminPermissions />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

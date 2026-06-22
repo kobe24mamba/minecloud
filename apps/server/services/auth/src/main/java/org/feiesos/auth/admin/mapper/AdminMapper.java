@@ -5,7 +5,6 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.feiesos.auth.entity.SysPermission;
 import org.feiesos.auth.entity.SysRole;
-import org.feiesos.auth.entity.SysUser;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public interface AdminMapper {
 
     @Select("SELECT COUNT(*) FROM sys_user_role ur " +
             "JOIN sys_role r ON ur.role_id = r.id AND r.deleted = false " +
-            "WHERE ur.user_id = #{userId} AND r.code = 'ADMIN'")
+            "WHERE ur.user_id = #{userId} AND r.code = 'ROLE_ADMIN'")
     int countAdminRole(@Param("userId") Long userId);
 
     @Select("SELECT COUNT(*) FROM sys_user_role ur " +
