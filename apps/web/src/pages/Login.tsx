@@ -35,7 +35,7 @@ export default function Login() {
         <div className="auth-wrapper-inner">
           <div className="auth-header">
             <Logo />
-            <h1>登录 Minecloud</h1>
+            <h1><b>登录 Minecloud</b></h1>
           </div>
 
           <div className="auth-card">

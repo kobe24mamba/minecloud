@@ -5,87 +5,49 @@
   background: var(--color-canvas);
 }
 
-.home-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
-  height: 56px;
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.home-header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.home-header-left svg {
-  width: 22px;
-  height: 22px;
-}
-
-.home-header-left span {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.home-header-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-}
-
-.home-header-right span {
-  color: var(--color-text-secondary);
-}
-
-.btn-logout {
-  padding: 3px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 20px;
-  color: var(--color-text-secondary);
-  background: var(--color-canvas);
-  border: 1px solid var(--color-border-muted);
-  border-radius: var(--radius);
-}
-
-.btn-logout:hover {
-  background: var(--color-border-muted);
-}
-
 .home-body {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 24px;
 }
 
-.home-empty {
+.home-cards {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.home-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 240px;
+  padding: 32px 24px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   text-align: center;
-  color: var(--color-text-secondary);
-  max-width: 480px;
-  padding: 2rem;
-}
-
-.home-empty svg {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 16px;
-  color: var(--color-text-tertiary);
-}
-
-.home-empty h2 {
-  font-size: 20px;
-  font-weight: 300;
-  letter-spacing: -0.5px;
   color: var(--color-text);
-  margin-bottom: 4px;
+  text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.home-empty p {
-  font-size: 14px;
+.home-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.15);
+  text-decoration: none;
+}
+
+.home-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.home-card p {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
 }

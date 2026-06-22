@@ -8,6 +8,7 @@
 
 :root {
   --color-bg: #ffffff;
+  --color-bg-column: #f6f8fa;
   --color-canvas: #ffffff;
   --color-border: #d0d7de;
   --color-border-muted: #d8dee4;

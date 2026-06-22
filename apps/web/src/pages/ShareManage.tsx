@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { listShares, deleteShare, type ShareResponse } from '../api/share';
-import { getStoredUser, logout } from '../api/auth';
-import Logo from '../components/Logo';
+import { logout } from '../api/auth';
+import AppHeader from '../components/AppHeader';
+import { formatExpireDate } from '../utils/format';
 import './SharePage.css';
 
 export default function ShareManage() {
   const navigate = useNavigate();
-  const user = getStoredUser();
   const [shares, setShares] = useState<ShareResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -46,26 +46,11 @@ export default function ShareManage() {
 
   function copyShareUrl(url: string) {
     navigator.clipboard.writeText(url);
-    alert('链接已复制');
-  }
-
-  function formatDate(dateStr: string | null) {
-    if (!dateStr) return '永不过期';
-    return new Date(dateStr).toLocaleString('zh-CN');
   }
 
   return (
     <div className="share-page">
-      <header className="share-header">
-        <div className="share-header-left">
-          <Logo />
-          <span>minecloud</span>
-        </div>
-        <div className="share-header-right">
-          <span>{user?.nickname || user?.username}</span>
-          <button className="btn-logout" onClick={handleLogout}>退出</button>
-        </div>
-      </header>
+      <AppHeader onLogout={handleLogout} />
 
       <main className="share-body">
         <div className="share-container">
@@ -104,11 +89,11 @@ export default function ShareManage() {
                     </div>
                     <div className="share-info-row">
                       <span className="share-label">过期时间:</span>
-                      <span>{formatDate(share.expireAt)}</span>
+                      <span>{formatExpireDate(share.expireAt)}</span>
                     </div>
                     <div className="share-info-row">
                       <span className="share-label">创建时间:</span>
-                      <span>{formatDate(share.createdAt)}</span>
+                      <span>{formatExpireDate(share.createdAt)}</span>
                     </div>
                     {share.remark && (
                       <div className="share-info-row">

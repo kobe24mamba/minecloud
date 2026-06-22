@@ -6,43 +6,6 @@
   background: var(--color-canvas);
 }
 
-.share-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
-  height: 56px;
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.share-header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.share-header-left svg {
-  width: 22px;
-  height: 22px;
-}
-
-.share-header-left span {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.share-header-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-}
-
-.share-header-right span {
-  color: var(--color-text-secondary);
-}
-
 .share-body {
   flex: 1;
   padding: 24px;
