@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPublicShareInfo, verifyShareAccess, type PublicShareInfoResponse } from '../api/share';
 import Logo from '../components/Logo';
+import { formatExpireDate } from '../utils/format';
 import './SharePage.css';
 
 export default function SharedFile() {
@@ -77,11 +78,6 @@ export default function SharedFile() {
     }
   }
 
-  function formatDate(dateStr: string | null | undefined) {
-    if (!dateStr) return '永不过期';
-    return new Date(dateStr).toLocaleString('zh-CN');
-  }
-
   if (loading) {
     return (
       <div className="share-public-page">
@@ -155,7 +151,7 @@ export default function SharedFile() {
               </div>
               <div className="share-info-row">
                 <span className="share-label">过期时间:</span>
-                <span>{formatDate(shareInfo?.expireAt)}</span>
+                <span>{formatExpireDate(shareInfo?.expireAt)}</span>
               </div>
               {shareInfo?.remark && (
                 <div className="share-info-row">

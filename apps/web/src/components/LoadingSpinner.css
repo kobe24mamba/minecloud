@@ -1,0 +1,18 @@
+.loading-spinner-root {
+  display: flex;
+  justify-content: center;
+  padding: 64px 0;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--color-border-muted);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: ls-spin 0.6s linear infinite;
+}
+
+@keyframes ls-spin {
+  to { transform: rotate(360deg); }
+}

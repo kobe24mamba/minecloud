@@ -24,8 +24,8 @@ export default function App() {
         {/* 受保护路由 */}
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />} />
+          <Route path="/files" element={<FileManager />} />
           <Route path="/shares" element={<ShareManage />} />
-          <Route path="/" element={<FileManager />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
