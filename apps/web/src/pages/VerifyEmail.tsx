@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, startTransition } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { verifyEmail } from '../api/auth';
 import Logo from '../components/Logo';
@@ -11,7 +11,10 @@ export default function VerifyEmail() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    if (!token) { setStatus('error'); setMessage('缺少验证令牌'); return; }
+    if (!token) {
+      startTransition(() => { setStatus('error'); setMessage('缺少验证令牌'); });
+      return;
+    }
     verifyEmail(token)
       .then(() => { setStatus('success'); setMessage('邮箱验证成功。'); })
       .catch((err) => { setStatus('error'); setMessage(err instanceof Error ? err.message : '验证失败'); });

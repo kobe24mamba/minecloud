@@ -8,6 +8,7 @@ import ResetPassword from './pages/ResetPassword';
 import Home from './pages/Home';
 import ShareManage from './pages/ShareManage';
 import SharedFile from './pages/SharedFile';
+import FileManager from './pages/FileManager';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />} />
           <Route path="/shares" element={<ShareManage />} />
+          <Route path="/" element={<FileManager />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
