@@ -452,6 +452,75 @@ public class StorageFacade {
         return fileNodeMapper.selectById(fileId);
     }
 
+    @Transactional
+    public void batchDelete(List<Long> fileIds, Long userId) {
+        authzService.checkPermission(userId, "file:delete");
+        for (Long id : fileIds) {
+            FileNode node = fileNodeMapper.selectById(id);
+            if (node == null) continue;
+            if (!userId.equals(node.getOwnerId())) continue;
+            if (node.getIsDir()) {
+                deleteChildrenRecursively(node.getId());
+            } else {
+                StorageBackend backend = router.route(node);
+                backend.delete(node.getStoragePath());
+            }
+            fileNodeMapper.update(null,
+                    new LambdaUpdateWrapper<FileNode>()
+                            .eq(FileNode::getId, node.getId())
+                            .set(FileNode::getIsDeleted, true)
+                            .set(FileNode::getDeleteTime, LocalDateTime.now()));
+        }
+    }
+
+    @Transactional
+    public List<FileNode> batchMove(List<Long> fileIds, Long targetParentId, Long userId) {
+        authzService.checkPermission(userId, "file:write");
+        validateTargetParent(targetParentId, userId);
+        List<FileNode> moved = new ArrayList<>();
+        for (Long id : fileIds) {
+            FileNode node = fileNodeMapper.selectById(id);
+            if (node == null) continue;
+            if (!userId.equals(node.getOwnerId())) continue;
+            if (Boolean.TRUE.equals(node.getIsDir())) {
+                if (Objects.equals(id, targetParentId)) continue;
+                if (isDescendant(targetParentId, id)) continue;
+            }
+            try {
+                checkNameConflict(node.getName(), targetParentId, id, userId);
+            } catch (BusinessException e) {
+                continue;
+            }
+            node.setParentId(targetParentId);
+            fileNodeMapper.updateById(node);
+            moved.add(fileNodeMapper.selectById(id));
+        }
+        return moved;
+    }
+
+    @Transactional
+    public List<FileNode> batchCopy(List<Long> fileIds, Long targetParentId, Long userId) {
+        authzService.checkPermission(userId, "file:write");
+        validateTargetParent(targetParentId, userId);
+        List<FileNode> copied = new ArrayList<>();
+        for (Long id : fileIds) {
+            FileNode source = fileNodeMapper.selectById(id);
+            if (source == null) continue;
+            if (!userId.equals(source.getOwnerId())) continue;
+            try {
+                checkNameConflict(source.getName(), targetParentId, null, userId);
+            } catch (BusinessException e) {
+                continue;
+            }
+            if (Boolean.TRUE.equals(source.getIsDir())) {
+                copied.add(copyDirectory(source, targetParentId, userId));
+            } else {
+                copied.add(copyFile(source, targetParentId, userId));
+            }
+        }
+        return copied;
+    }
+
     private void assertOwnership(FileNode node, Long userId) {
         if (!userId.equals(node.getOwnerId())) {
             throw new BusinessException(403, "无权操作该文件");

@@ -9,8 +9,13 @@ import org.feiesos.share.entity.FileShare;
 import org.feiesos.share.mapper.FileShareMapper;
 import org.feiesos.share.service.ShareService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClient;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -21,21 +26,21 @@ import java.util.UUID;
 public class ShareServiceImpl implements ShareService {
 
     private final FileShareMapper fileShareMapper;
+    private final RestClient storageRestClient;
 
     @Value("${minecloud.frontend-url:http://localhost:5173}")
     private String frontendUrl;
 
-    public ShareServiceImpl(FileShareMapper fileShareMapper) {
+    public ShareServiceImpl(FileShareMapper fileShareMapper, RestClient storageRestClient) {
         this.fileShareMapper = fileShareMapper;
+        this.storageRestClient = storageRestClient;
     }
 
     @Override
     @Transactional
     public ShareResponse createShare(CreateShareRequest request, Long userId) {
-        // 生成分享令牌（16位短码）
         String shareToken = generateShareToken();
 
-        // 创建分享记录
         FileShare fileShare = new FileShare();
         fileShare.setShareToken(shareToken);
         fileShare.setFileNodeId(request.getFileNodeId());
@@ -86,7 +91,6 @@ public class ShareServiceImpl implements ShareService {
             throw new BusinessException(403, "无权修改此分享");
         }
 
-        // 更新分享设置
         if (request.getAccessPassword() != null) {
             fileShare.setAccessPassword(request.getAccessPassword());
         }
@@ -115,7 +119,6 @@ public class ShareServiceImpl implements ShareService {
             throw new BusinessException(403, "无权删除此分享");
         }
 
-        // 逻辑删除
         LambdaUpdateWrapper<FileShare> wrapper = new LambdaUpdateWrapper<FileShare>()
                 .eq(FileShare::getId, shareId)
                 .set(FileShare::getDeleted, true);
@@ -148,18 +151,15 @@ public class ShareServiceImpl implements ShareService {
             throw new BusinessException("分享不存在或已失效");
         }
 
-        // 检查是否过期
         if (isExpired(fileShare)) {
             throw new BusinessException("分享已过期");
         }
 
-        // 检查下载次数
         if (fileShare.getMaxDownloads() != null && fileShare.getMaxDownloads() > 0
                 && fileShare.getDownloadCount() >= fileShare.getMaxDownloads()) {
             throw new BusinessException("分享下载次数已达上限");
         }
 
-        // 验证密码
         if (fileShare.getAccessPassword() != null && !fileShare.getAccessPassword().isEmpty()) {
             if (password == null || !password.equals(fileShare.getAccessPassword())) {
                 throw new BusinessException(403, "访问密码错误");
@@ -188,9 +188,45 @@ public class ShareServiceImpl implements ShareService {
         return fileShare.getFileNodeId();
     }
 
-    /**
-     * 通过分享令牌查找分享记录
-     */
+    @Override
+    public ResponseEntity<Resource> downloadSharedFile(FileShare fileShare) {
+        Long fileId = fileShare.getFileNodeId();
+        Long ownerId = fileShare.getOwnerId();
+
+        ResponseEntity<Resource> storageResponse = storageRestClient.get()
+                .uri("/api/v1/files/download/{id}", fileId)
+                .header("X-User-Id", String.valueOf(ownerId))
+                .retrieve()
+                .toEntity(Resource.class);
+
+        if (!storageResponse.getStatusCode().is2xxSuccessful() || storageResponse.getBody() == null) {
+            throw new BusinessException("文件下载失败");
+        }
+
+        String filename = extractFilename(storageResponse);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .contentType(storageResponse.getHeaders().getContentType() != null
+                        ? storageResponse.getHeaders().getContentType()
+                        : MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(storageResponse.getHeaders().getContentLength())
+                .body(storageResponse.getBody());
+    }
+
+    private String extractFilename(ResponseEntity<Resource> response) {
+        String disposition = response.getHeaders().getFirst(HttpHeaders.CONTENT_DISPOSITION);
+        if (disposition != null && disposition.contains("filename=")) {
+            int idx = disposition.indexOf("filename=");
+            String name = disposition.substring(idx + 9);
+            if (name.startsWith("\"") && name.endsWith("\"")) {
+                name = name.substring(1, name.length() - 1);
+            }
+            return name;
+        }
+        return "download";
+    }
+
     private FileShare findByToken(String shareToken) {
         LambdaQueryWrapper<FileShare> wrapper = new LambdaQueryWrapper<FileShare>()
                 .eq(FileShare::getShareToken, shareToken)
@@ -198,17 +234,11 @@ public class ShareServiceImpl implements ShareService {
         return fileShareMapper.selectOne(wrapper);
     }
 
-    /**
-     * 生成16位分享令牌
-     */
     private String generateShareToken() {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         return uuid.substring(0, 16);
     }
 
-    /**
-     * 检查是否过期
-     */
     private boolean isExpired(FileShare fileShare) {
         if (fileShare.getExpireAt() == null) {
             return false;
@@ -216,9 +246,6 @@ public class ShareServiceImpl implements ShareService {
         return OffsetDateTime.now().isAfter(fileShare.getExpireAt());
     }
 
-    /**
-     * 转换为响应 DTO
-     */
     private ShareResponse toResponse(FileShare fileShare) {
         return ShareResponse.builder()
                 .id(fileShare.getId())

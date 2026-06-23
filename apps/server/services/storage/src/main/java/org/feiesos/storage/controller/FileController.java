@@ -325,6 +325,66 @@ public class FileController {
         }
     }
 
+    @PostMapping("/batch/delete")
+    public R<String> batchDelete(@RequestBody Map<String, List<String>> body,
+                                  HttpServletRequest request) {
+        try {
+            List<String> rawIds = body.get("ids");
+            if (rawIds == null || rawIds.isEmpty()) {
+                return R.fail("请选择要删除的文件");
+            }
+            List<Long> ids = rawIds.stream().map(Long::valueOf).toList();
+            Long userId = getUserId(request);
+            storageFacade.batchDelete(ids, userId);
+            return R.ok("批量删除完成");
+        } catch (BusinessException e) {
+            return R.fail(e.getCode(), e.getMessage());
+        } catch (Exception e) {
+            log.error("批量删除异常", e);
+            return R.fail("批量删除失败: " + e.getMessage());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @PostMapping("/batch/move")
+    public R<List<FileItemResponse>> batchMove(@RequestBody Map<String, Object> body,
+                                                HttpServletRequest request) {
+        try {
+            List<String> rawIds = (List<String>) body.get("ids");
+            if (rawIds == null || rawIds.isEmpty()) return R.fail("请选择要移动的文件");
+            List<Long> ids = rawIds.stream().map(Long::valueOf).toList();
+            Long targetParentId = Long.valueOf((String) body.get("targetParentId"));
+            Long userId = getUserId(request);
+            List<FileNode> nodes = storageFacade.batchMove(ids, targetParentId, userId);
+            return R.ok(nodes.stream().map(FileItemResponse::from).toList());
+        } catch (BusinessException e) {
+            return R.fail(e.getCode(), e.getMessage());
+        } catch (Exception e) {
+            log.error("批量移动异常", e);
+            return R.fail("批量移动失败: " + e.getMessage());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @PostMapping("/batch/copy")
+    public R<List<FileItemResponse>> batchCopy(@RequestBody Map<String, Object> body,
+                                                HttpServletRequest request) {
+        try {
+            List<String> rawIds = (List<String>) body.get("ids");
+            if (rawIds == null || rawIds.isEmpty()) return R.fail("请选择要复制的文件");
+            List<Long> ids = rawIds.stream().map(Long::valueOf).toList();
+            Long targetParentId = Long.valueOf((String) body.get("targetParentId"));
+            Long userId = getUserId(request);
+            List<FileNode> nodes = storageFacade.batchCopy(ids, targetParentId, userId);
+            return R.ok(nodes.stream().map(FileItemResponse::from).toList());
+        } catch (BusinessException e) {
+            return R.fail(e.getCode(), e.getMessage());
+        } catch (Exception e) {
+            log.error("批量复制异常", e);
+            return R.fail("批量复制失败: " + e.getMessage());
+        }
+    }
+
     private Long getUserId(HttpServletRequest request) {
         Object userId = request.getAttribute("currentUserId");
         if (userId == null) {

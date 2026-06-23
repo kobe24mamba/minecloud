@@ -2,6 +2,8 @@ package org.feiesos.share.service;
 
 import org.feiesos.share.dto.*;
 import org.feiesos.share.entity.FileShare;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -54,4 +56,9 @@ public interface ShareService {
      * 获取分享的文件ID（验证后调用）
      */
     Long getSharedFileNodeId(String shareToken);
+
+    /**
+     * 下载分享文件（从存储服务代理）
+     */
+    ResponseEntity<Resource> downloadSharedFile(FileShare fileShare);
 }

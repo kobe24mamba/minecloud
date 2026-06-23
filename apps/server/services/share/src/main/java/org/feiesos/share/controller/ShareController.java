@@ -6,6 +6,7 @@ import org.feiesos.common.exception.BusinessException;
 import org.feiesos.common.result.R;
 import org.feiesos.share.dto.*;
 import org.feiesos.share.entity.FileShare;
+import org.feiesos.share.service.AuthzService;
 import org.feiesos.share.service.ShareService;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +21,11 @@ import java.util.List;
 public class ShareController {
 
     private final ShareService shareService;
+    private final AuthzService authzService;
 
-    public ShareController(ShareService shareService) {
+    public ShareController(ShareService shareService, AuthzService authzService) {
         this.shareService = shareService;
+        this.authzService = authzService;
     }
 
     /**
@@ -33,6 +36,9 @@ public class ShareController {
                                          HttpServletRequest httpRequest) {
         try {
             Long userId = getUserId(httpRequest);
+            if (request.getFileNodeId() != null) {
+                authzService.checkPermission(userId, "file:read");
+            }
             ShareResponse response = shareService.createShare(request, userId);
             return R.ok(response);
         } catch (BusinessException e) {
@@ -87,6 +93,7 @@ public class ShareController {
                                          HttpServletRequest httpRequest) {
         try {
             Long userId = getUserId(httpRequest);
+            authzService.checkPermission(userId, "file:read");
             ShareResponse response = shareService.updateShare(id, request, userId);
             return R.ok(response);
         } catch (BusinessException e) {

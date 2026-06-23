@@ -18,10 +18,17 @@ public class UserContextFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    @SuppressWarnings("NullableProblems")
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        String path = request.getRequestURI();
+
+        // public paths do not require auth
+        if (path.startsWith("/api/v1/share/public/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String userIdHeader = request.getHeader("X-User-Id");
 
         if (userIdHeader == null) {

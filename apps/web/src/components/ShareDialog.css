@@ -1,0 +1,108 @@
+.share-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 200;
+}
+
+.share-dialog {
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-canvas, #fff);
+  border: 1px solid var(--color-border, #d0d7de);
+  border-radius: var(--radius-lg, 8px);
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.share-dialog-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.share-dialog-error {
+  background: var(--color-error-bg, #ffebe9);
+  border: 1px solid var(--color-error-border, #f85149);
+  color: var(--color-error, #cf222e);
+  border-radius: var(--radius, 6px);
+  padding: 8px 12px;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.share-dialog-field {
+  margin-bottom: 14px;
+}
+
+.share-dialog-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--color-text, #1f2328);
+}
+
+.share-dialog-input {
+  display: block;
+  width: 100%;
+  padding: 5px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border, #d0d7de);
+  border-radius: var(--radius, 6px);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.share-dialog-input:focus {
+  border-color: var(--color-accent, #0969da);
+  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.15);
+}
+
+.share-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.share-dialog-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--color-text);
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border-muted, #d0d7de);
+  border-radius: var(--radius, 6px);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.share-dialog-btn:hover {
+  background: var(--color-border-muted, #d0d7de);
+}
+
+.share-dialog-btn-primary {
+  color: #fff;
+  background: #1f883d;
+  border-color: rgba(31, 35, 40, 0.15);
+}
+
+.share-dialog-btn-primary:hover {
+  background: #197935;
+}
+
+.share-dialog-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

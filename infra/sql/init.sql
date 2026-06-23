@@ -170,7 +170,7 @@ INSERT INTO sys_role_permission (role_id, permission_id) VALUES
 (3, 1);
 
 ---------------
--- 认证与授权
+-- 分享
 ---------------
 -- file_share
 CREATE TABLE IF NOT EXISTS file_share (
@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS file_share (
     max_downloads   INTEGER DEFAULT -1,                     -- 最大下载次数（-1=无限）
     download_count  INTEGER DEFAULT 0,                      -- 已下载次数
     remark          TEXT,                                   -- 备注
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),     -- 创建时间
+    created_at      TIMESTAMPTZ DEFAULT NOW(),              -- 创建时间（NOT NULL 已移除，因为 MyBatis-Plus 的 FieldFill.INSERT 无 MetaObjectHandler 时会发 NULL）
     deleted         BOOLEAN DEFAULT FALSE                   -- 逻辑删除
 );
 

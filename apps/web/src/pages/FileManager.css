@@ -395,3 +395,143 @@
   justify-content: flex-end;
   gap: 8px;
 }
+
+/* ─── Checkbox column (hidden until selection active) ─── */
+
+.fm-th-check {
+  width: 32px;
+  padding: 8px 4px 8px 12px;
+  display: none;
+}
+
+.fm-cell-check {
+  width: 32px;
+  padding: 6px 4px 6px 12px;
+  display: none;
+}
+
+.fm-checkbox {
+  display: block;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--color-accent, #0969da);
+}
+
+.fm-checkboxes-visible .fm-th-check,
+.fm-checkboxes-visible .fm-cell-check {
+  display: table-cell;
+}
+
+/* ─── Selected row ─── */
+
+.fm-row-selected {
+  background: #ddf4ff !important;
+}
+
+/* ─── Batch action bar ─── */
+
+.fm-batch-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px 24px;
+  background: var(--color-canvas, #fff);
+  border-top: 1px solid var(--color-border, #d0d7de);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 50;
+}
+
+.fm-batch-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text, #1f2328);
+  white-space: nowrap;
+}
+
+.fm-batch-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.fm-btn-batch {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 14px;
+  gap: 6px;
+}
+
+.fm-btn-batch-danger {
+  color: var(--color-error, #cf222e);
+}
+
+/* ─── Directory picker ─── */
+
+.fm-modal-wide {
+  max-width: 520px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.fm-dir-picker-list {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid var(--color-border-muted, #d0d7de);
+  border-radius: var(--radius, 6px);
+  margin-bottom: 12px;
+  min-height: 120px;
+}
+
+.fm-dir-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: var(--color-text, #1f2328);
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.fm-dir-picker-item:hover {
+  background: #f6f8fa;
+}
+
+.fm-dir-picker-selected {
+  background: #ddf4ff !important;
+  font-weight: 600;
+}
+
+.fm-dir-picker-item + .fm-dir-picker-item {
+  border-top: 1px solid var(--color-border-muted, #d0d7de);
+}
+
+.fm-dir-picker-name {
+  flex: 1;
+}
+
+.fm-dir-picker-open {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: var(--color-accent, #0969da);
+  background: none;
+  border: 1px solid var(--color-border-muted, #d0d7de);
+  border-radius: var(--radius, 6px);
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.fm-dir-picker-open:hover {
+  background: var(--color-border-muted, #d0d7de);
+}

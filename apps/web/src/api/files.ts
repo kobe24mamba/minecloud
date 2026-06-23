@@ -147,3 +147,28 @@ export async function fetchPreviewText(id: string): Promise<string> {
   }
   return res.text();
 }
+
+// ── Batch operations ──
+
+type BatchIdsRequest = { ids: string[] };
+
+export async function batchDelete(ids: string[]): Promise<void> {
+  await apiClient<void>('/files/batch/delete', {
+    method: 'POST',
+    body: JSON.stringify({ ids } satisfies BatchIdsRequest),
+  });
+}
+
+export async function batchMove(ids: string[], targetParentId: string): Promise<FileItem[]> {
+  return apiClient<FileItem[]>('/files/batch/move', {
+    method: 'POST',
+    body: JSON.stringify({ ids, targetParentId }),
+  });
+}
+
+export async function batchCopy(ids: string[], targetParentId: string): Promise<FileItem[]> {
+  return apiClient<FileItem[]>('/files/batch/copy', {
+    method: 'POST',
+    body: JSON.stringify({ ids, targetParentId }),
+  });
+}
